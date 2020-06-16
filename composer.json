@@ -41,7 +41,6 @@
         "lumpnp/laravel-support": "^7.0",
         "lumphp/laravel-testing": "^7.0",
         "lumphp/laravel-translation": "^7.0",
-
         "lumphp/laravel-validation": "^7.0",
         "lumphp/laravel-log": "^7.0",
         "dragonmantank/cron-expression": "^2.0",
