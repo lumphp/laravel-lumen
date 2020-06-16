@@ -3,7 +3,6 @@
 namespace Laravel\Lumen\Testing;
 
 use Exception;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Facade;
 use Mockery;
 use PHPUnit\Framework\TestCase as BaseTestCase;
@@ -273,32 +272,6 @@ abstract class TestCase extends BaseTestCase
         );
 
         return $this;
-    }
-
-    /**
-     * Set the currently logged in user for the application.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  string|null  $driver
-     * @return $this
-     */
-    public function actingAs(Authenticatable $user, $driver = null)
-    {
-        $this->be($user, $driver);
-
-        return $this;
-    }
-
-    /**
-     * Set the currently logged in user for the application.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  string|null  $driver
-     * @return void
-     */
-    public function be(Authenticatable $user, $driver = null)
-    {
-        $this->app['auth']->guard($driver)->setUser($user);
     }
 
     /**

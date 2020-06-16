@@ -1,10 +1,8 @@
 <?php
-
 namespace Laravel\Lumen\Console;
 
 use Illuminate\Console\Application as Artisan;
 use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Console\Scheduling\ScheduleRunCommand;
 use Illuminate\Contracts\Console\Kernel as KernelContract;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Http\Request;
@@ -21,21 +19,18 @@ class Kernel implements KernelContract
      * @var \Laravel\Lumen\Application
      */
     protected $app;
-
     /**
      * The Artisan application instance.
      *
      * @var \Illuminate\Console\Application
      */
     protected $artisan;
-
     /**
      * Indicates if facade aliases are enabled for the console.
      *
      * @var bool
      */
     protected $aliases = true;
-
     /**
      * The Artisan commands provided by the application.
      *
@@ -46,17 +41,16 @@ class Kernel implements KernelContract
     /**
      * Create a new console kernel instance.
      *
-     * @param  \Laravel\Lumen\Application  $app
+     * @param \Laravel\Lumen\Application $app
+     *
      * @return void
      */
     public function __construct(Application $app)
     {
         $this->app = $app;
-
         if ($this->app->runningInConsole()) {
             $this->setRequestForConsole($this->app);
         }
-
         $this->app->prepareForConsoleCommand($this->aliases);
         $this->defineConsoleSchedule();
     }
@@ -64,27 +58,35 @@ class Kernel implements KernelContract
     /**
      * Set the request instance for URL generation.
      *
-     * @param  \Illuminate\Contracts\Foundation\Application  $app
+     * @param \Illuminate\Contracts\Foundation\Application $app
+     *
      * @return void
      */
     protected function setRequestForConsole(Application $app)
     {
         $uri = $app->make('config')->get('app.url', 'http://localhost');
-
         $components = parse_url($uri);
-
         $server = $_SERVER;
-
         if (isset($components['path'])) {
-            $server = array_merge($server, [
-                'SCRIPT_FILENAME' => $components['path'],
-                'SCRIPT_NAME' => $components['path'],
-            ]);
+            $server = array_merge(
+                $server,
+                [
+                    'SCRIPT_FILENAME' => $components['path'],
+                    'SCRIPT_NAME' => $components['path'],
+                ]
+            );
         }
-
-        $app->instance('request', Request::create(
-            $uri, 'GET', [], [], [], $server
-        ));
+        $app->instance(
+            'request',
+            Request::create(
+                $uri,
+                'GET',
+                [],
+                [],
+                [],
+                $server
+            )
+        );
     }
 
     /**
@@ -95,17 +97,18 @@ class Kernel implements KernelContract
     protected function defineConsoleSchedule()
     {
         $this->app->instance(
-            Schedule::class, $schedule = new Schedule
+            Schedule::class,
+            $schedule = new Schedule
         );
-
         $this->schedule($schedule);
     }
 
     /**
      * Run the console application.
      *
-     * @param  \Symfony\Component\Console\Input\InputInterface  $input
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
      * @return int
      */
     public function handle($input, $output = null)
@@ -116,7 +119,6 @@ class Kernel implements KernelContract
             return $this->getArtisan()->run($input, $output);
         } catch (Throwable $e) {
             $this->reportException($e);
-
             $this->renderException($output, $e);
 
             return 1;
@@ -126,8 +128,9 @@ class Kernel implements KernelContract
     /**
      * Terminate the application.
      *
-     * @param  \Symfony\Component\Console\Input\InputInterface  $input
-     * @param  int  $status
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param int $status
+     *
      * @return void
      */
     public function terminate($input, $status)
@@ -135,22 +138,22 @@ class Kernel implements KernelContract
         //
     }
 
-    /**
-     * Define the application's command schedule.
-     *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-     * @return void
-     */
-    protected function schedule(Schedule $schedule)
-    {
-        //
-    }
-
+    ///**
+    // * Define the application's command schedule.
+    // *
+    // * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+    // * @return void
+    // */
+    //protected function schedule(Schedule $schedule)
+    //{
+    //    //
+    //}
     /**
      * Run an Artisan console command by name.
      *
-     * @param  string  $command
-     * @param  array  $parameters
+     * @param string $command
+     * @param array $parameters
+     *
      * @return int
      */
     public function call($command, array $parameters = [], $outputBuffer = null)
@@ -161,8 +164,9 @@ class Kernel implements KernelContract
     /**
      * Queue the given console command.
      *
-     * @param  string  $command
-     * @param  array  $parameters
+     * @param string $command
+     * @param array $parameters
+     *
      * @return void
      */
     public function queue($command, array $parameters = [])
@@ -198,8 +202,11 @@ class Kernel implements KernelContract
     protected function getArtisan()
     {
         if (is_null($this->artisan)) {
-            return $this->artisan = (new Artisan($this->app, $this->app->make('events'), $this->app->version()))
-                                ->resolveCommands($this->getCommands());
+            return $this->artisan = (new Artisan(
+                $this->app,
+                $this->app->make('events'),
+                $this->app->version()
+            ))->resolveCommands($this->getCommands());
         }
 
         return $this->artisan;
@@ -212,15 +219,14 @@ class Kernel implements KernelContract
      */
     protected function getCommands()
     {
-        return array_merge($this->commands, [
-            ScheduleRunCommand::class,
-        ]);
+        return $this->commands;
     }
 
     /**
      * Report the exception to the exception handler.
      *
-     * @param  \Throwable  $e
+     * @param \Throwable $e
+     *
      * @return void
      */
     protected function reportException(Throwable $e)
@@ -231,8 +237,9 @@ class Kernel implements KernelContract
     /**
      * Report the exception to the exception handler.
      *
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
-     * @param  \Throwable  $e
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param \Throwable $e
+     *
      * @return void
      */
     protected function renderException($output, Throwable $e)

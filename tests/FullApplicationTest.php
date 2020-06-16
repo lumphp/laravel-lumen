@@ -596,23 +596,6 @@ class FullApplicationTest extends TestCase
         $this->assertEquals(302, $response->getStatusCode());
     }
 
-    public function testRequestUser()
-    {
-        $app = new Application();
-
-        $app['auth']->viaRequest('api', function ($request) {
-            return new \Illuminate\Auth\GenericUser(['id' => 1234]);
-        });
-
-        $app->router->get('/', function (Illuminate\Http\Request $request) {
-            return $request->user()->getAuthIdentifier();
-        });
-
-        $response = $app->handle(Request::create('/', 'GET'));
-
-        $this->assertSame('1234', $response->getContent());
-    }
-
     public function testCanResolveFilesystemFactoryFromContract()
     {
         $app = new Application();
