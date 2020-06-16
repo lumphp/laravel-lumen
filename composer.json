@@ -11,8 +11,8 @@
     "license": "MIT",
     "homepage": "https://lumen.laravel.com",
     "support": {
-        "issues": "https://github.com/lumphp/lum-framework/issues",
-        "source": "https://github.com/lumphp/lum-framework"
+        "issues": "https://github.com/lumphp/laravel-lumenissues",
+        "source": "https://github.com/lumphp/laravel-lumen"
     },
     "authors": [
         {
